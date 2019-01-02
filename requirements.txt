@@ -1,4 +1,5 @@
 certifi==2018.11.29
+mysql-connector==2.1.6
 pipenv==2018.11.26
 virtualenv==16.1.0
 virtualenv-clone==0.4.0
