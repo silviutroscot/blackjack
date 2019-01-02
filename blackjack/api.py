@@ -82,7 +82,38 @@ def registerUser(username, password):
                 )
     else:
         return (3, "Password is too short")
-    
+
+def login(username, password):
+    # check if the username exists in db
+    # retreive its salt if exists
+    if validateUsername(username):
+        usersDbConnector = mysql.connector.connect(
+                host="localhost",
+                user="root",
+                passwd="parolaST1",
+                database="users"
+                )
+        usersDbCursor = usersDbConnector.cursor()
+        selectUserStatement = "SELECT * FROM logins WHERE username = %s"
+        adr = (username, )
+        usersDbCursor.execute(selectUserStatement, adr)
+        result = usersDbCursor.fetchall()
+        # if the username is in the db, check if the password matches
+        if len(result) > 0:
+            salt = result[0][2]
+            saltedPass = salt + password
+            passHash = sha256((saltedPass).encode('utf-8')).hexdigest()
+            confirmCredentialsStatement = "SELECT * FROM logins WHERE username = %s AND passhash = %s"
+            values = (username, passHash)
+            usersDbCursor.execute(confirmCredentialsStatement, values)
+            credentialsCheckResponse = usersDbCursor.fetchall()
+            # if the credentials are correct return "0" response
+            # and the credit available for that player
+            if len(credentialsCheckResponse) > 0:
+                return (0, credentialsCheckResponse[0][3])
+        else:
+            return (1, "Sorry, you have not registered")
+
 # check if the username contains only letters and  
 # digits and its length is between 5 and 255 chars
 def validateUsername(username):
