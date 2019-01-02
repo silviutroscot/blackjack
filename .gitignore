@@ -2,3 +2,4 @@ Pipfile*
 .vscode*
 package.json
 *__pycache__*
+blackjack.egg-info/

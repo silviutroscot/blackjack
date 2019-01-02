@@ -36,24 +36,25 @@ def initDatabase():
 # return true if the user is inserted successfully and false otherwise
 def registerUser(usersDbCursor, username, password):
     validateUsername(usersDbCursor, username)
+    # usersDbConnector = mysql.connector.connect(
+    #             host="localhost",
+    #             user="root",
+    #             passwd="parolaST1",
+    #             database="users"
+    #             )
+    #         usersDbCursor = usersDbConnector.cursor()
+    #         selectUserStatement = "SELECT * FROM logins WHERE username = %s"
+    #         adr = (username, )
+    #         usersDbCursor.execute(selectUserStatement, adr)
+    #         result = usersDbCursor.fetchall()
+    #         if len(result) is 0:
+    #             return True
 
-# check if the username contains only letters and digits and it is 
-# shorter than 255 chars and it is not already existent in the database
+# check if the username contains only letters and  
+# digits and its length is between 5 and 255 chars
 def validateUsername(username):
-    if len(username) < 255:
+    if len(username) < 255 and len(username) > 5:
         if re.match("^[A-Za-z0-9_-]*$", username):
-            usersDbConnector = mysql.connector.connect(
-                host="localhost",
-                user="root",
-                passwd="parolaST1",
-                database="users"
-                )
-            usersDbCursor = usersDbConnector.cursor()
-            selectUserStatement = "SELECT * FROM logins WHERE username = %s"
-            adr = (username, )
-            usersDbCursor.execute(selectUserStatement, adr)
-            result = usersDbCursor.fetchall()
-            if len(result) is 0:
-                return True
+            return True
     
     return False
