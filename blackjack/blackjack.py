@@ -16,7 +16,7 @@ def initGame(no_of_players):
 
 
 if __name__ == "__main__":
+    api.initDatabase()
     deck = gameUtils.Deck()
     print(deck.getNextCard().value)
-    print(api.validateUsername("miel23A"))
         
