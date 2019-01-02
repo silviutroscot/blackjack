@@ -61,17 +61,25 @@ def registerUser(username, password):
             # the user and the password hash in the login table
             if len(result) is 0:
                 salt = generateRandomWord(10)
-                passHash = sha256((salt + password).encode('utf-8')).hexdigest()
+                saltedPass = salt + password
+                passHash = sha256((saltedPass).encode('utf-8')).hexdigest()
                 print(passHash)
-                insertLoginEntryStatement = "INSERT INTO logins (username, passhash, salt) VALUES (%s, %s, %s)"
+                insertLoginEntryStatement = ("INSERT INTO logins (username,"
+                    "passhash, salt) VALUES (%s, %s, %s)"
+                    )
                 values = (username, passHash, salt)
                 usersDbCursor.execute(insertLoginEntryStatement, values)
                 usersDbConnector.commit()
-                return (0, "Your account was successfuly registered! Welcome to the game!")
+                return (0, (
+                    "Your account was successfuly registered!" 
+                    "Welcome to the game!"
+                    ))
             else:
                 return (1, "Your username is already in use")
         else:
-            return (2, "Username contains invalid characters or its length is not between 5 and 255")
+            return (2, ("Username contains invalid characters or its length is"
+                "not between 5 and 255")
+                )
     else:
         return (3, "Password is too short")
     
