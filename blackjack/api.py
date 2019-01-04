@@ -103,7 +103,8 @@ def login(username, password):
             salt = result[0][2]
             saltedPass = salt + password
             passHash = sha256((saltedPass).encode('utf-8')).hexdigest()
-            confirmCredentialsStatement = "SELECT * FROM logins WHERE username = %s AND passhash = %s"
+            confirmCredentialsStatement = '''SELECT * FROM logins WHERE \
+            username = %s AND passhash = %s'''
             values = (username, passHash)
             usersDbCursor.execute(confirmCredentialsStatement, values)
             credentialsCheckResponse = usersDbCursor.fetchall()
@@ -111,8 +112,13 @@ def login(username, password):
             # and the credit available for that player
             if len(credentialsCheckResponse) > 0:
                 return (0, credentialsCheckResponse[0][3])
+            else:
+                return (-1, ("Sorry, the credentials you have provided"
+                "are not valid"))
         else:
             return (1, "Sorry, you have not registered")
+    else:
+        return (2, "This username is not valid")
 
 # check if the username contains only letters and  
 # digits and its length is between 5 and 255 chars
