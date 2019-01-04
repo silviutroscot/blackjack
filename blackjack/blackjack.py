@@ -24,7 +24,13 @@ def registerUser():
 def login():
     username = input("Please insert your username: ")
     password = getpass.getpass("Password: ")
-    print(api.login(username, password))
+    loginResponse = api.login(username, password)
+    if loginResponse[0] == 0:
+        credit = loginResponse[1]
+        if (credit > 0):
+            print ('''Welcome {username}, your current credit is {credit}\
+            '''.format(username=username, credit=credit))
+
 
 if __name__ == "__main__":
     api.initDatabase()
