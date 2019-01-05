@@ -1,8 +1,7 @@
-import api
-import gameUtils
 import getpass
 
-
+from blackjack import gameUtils
+from blackjack import api
 # register a player
 
 # the initialization of the game
@@ -48,16 +47,33 @@ def startGameRound(username, credit):
         dealer = [deck.getNextCard().value.value]
         dealer.append(deck.getNextCard().value.value) 
         hand = (deck.getNextCard().value.value, deck.getNextCard().value.value)
-        sum = playerSum(hand, 0)
+        sum = playerSum(hand)
 
 # handler for the gameplay of a player in one game round
-def playerSum(hand, noOfAces): 
-    playerAces = hand.count(1)
-    # compute the sum for each ace as having value 11, and decrease the value to 1, one by one, until the sum is smaller than 21 
+def playerSum(hand): 
+    # count how many aces in hand
+    playerAces = 0
+    for card in hand:
+        if card.value.value == 1:
+            playerAces += 1
+    print(playerAces)
+    # compute the sum for each ace as having value 11, and decrease the 
+    # value to 1, one by one, until the sum is smaller than 21 
     sum = 0 
     for card in hand: 
-        sum += card
+        # cards with value larger than 10 value 10
+        value = card.value.value
+        if card.value.value > 10:
+            value = 10
+        sum += value
+    
+    sum += playerAces*10
+    while sum > 21 and playerAces > 0:
+        sum -= 10
+        playerAces -= 1
+    
     return sum
+
 
 
 if __name__ == "__main__": 
