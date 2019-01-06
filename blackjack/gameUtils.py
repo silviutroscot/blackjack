@@ -54,7 +54,6 @@ class Deck:
     # return the next card in the deck and remove it     
     def getNextCard(self):
         deckSize = len(self.cards)
-        print (deckSize)
         nextCard = self.cards[deckSize - 1]
         del self.cards[deckSize - 1]
         return nextCard

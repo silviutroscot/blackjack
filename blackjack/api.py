@@ -120,6 +120,25 @@ def login(username, password):
     else:
         return (2, "This username is not valid")
 
+# if the player wins, the bid paramerter is 
+# positive; otherwise, the bid is negative
+def updateAccountCredit(username, currentCredit, bid):
+    newCredit = currentCredit - bid
+    # update the credit in the database
+    usersDbConnector = mysql.connector.connect(
+                host="localhost",
+                user="root",
+                passwd="parolaST1",
+                database="users"
+                )
+    usersDbCursor = usersDbConnector.cursor()
+    updateCreditStatement = "UPDATE logins SET credit = %s WHERE username = %s"
+    val = (int(newCredit), username)
+    usersDbCursor.execute(updateCreditStatement, val)
+    # commit the update to the db
+    usersDbConnector.commit()
+    return (usersDbCursor.rowcount, newCredit)
+
 # check if the username contains only letters and  
 # digits and its length is between 5 and 255 chars
 def validateUsername(username):
