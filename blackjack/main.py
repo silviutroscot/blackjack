@@ -85,7 +85,7 @@ def startGameRound(username, credit):
             # if the dealer has less than the player loses
             elif dealerValue < pSum:
                 print('''You have {pSum} and the dealer has {dealer}. You won!
-                \n'''.format(pSum=pSum, dealer=dealerValue))
+                '''.format(pSum=pSum, dealer=dealerValue))
                 newCredit = api.updateAccountCredit(username, credit, bet)
                 if newCredit[0] is not 1:
                     print("An unexpected error occured. Please report it")
