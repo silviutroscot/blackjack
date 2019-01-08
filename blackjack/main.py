@@ -75,7 +75,7 @@ def startGameRound(username, credit):
             dealerValue = dealerSum(deck, dealer)
             # if the dealer has more than 21 it loses
             if dealerValue > 21:
-                print("Dealer busted! You won!")
+                print("Dealer busted! You won!\n")
                 newCredit = api.updateAccountCredit(username, credit, bet)
                 if newCredit[0] is not 1:
                     print("An unexpected error occured. Please report it")
@@ -85,7 +85,7 @@ def startGameRound(username, credit):
             # if the dealer has less than the player loses
             elif dealerValue < pSum:
                 print('''You have {pSum} and the dealer has {dealer}. You won!
-                '''.format(pSum=pSum, dealer=dealerValue))
+                \n'''.format(pSum=pSum, dealer=dealerValue))
                 newCredit = api.updateAccountCredit(username, credit, bet)
                 if newCredit[0] is not 1:
                     print("An unexpected error occured. Please report it")
@@ -95,12 +95,12 @@ def startGameRound(username, credit):
             # if player`s sum and dealer`s sum are equal, the bet is returned
             elif dealerValue == pSum:
                 print('''You have {pSum} and the dealer has {dealer}. It's a 
-                draw.'''.format(pSum=pSum, dealer=dealerValue))
+                draw.\n'''.format(pSum=pSum, dealer=dealerValue))
                 startGameRound(username, credit)
             # if the dealer's sum is larger than the player's sum, player loses
             else:
                 print('''You have {pSum}, the dealer has {dealer}. You lost:(
-                '''.format(pSum=pSum, dealer=dealerValue))
+                \n'''.format(pSum=pSum, dealer=dealerValue))
                 lostBet = -1 * bet
                 newCredit = api.updateAccountCredit(username, credit, lostBet)
                 if newCredit[0] is not 1:
@@ -134,7 +134,7 @@ def playerSum(deck, hand):
         playerAces -= 1
     
     if sum > 21:
-        print("Sorry, your sum is larger than 21, you lost this round :(")
+        print("Sorry, your sum is larger than 21, you lost this round :(\n")
         return sum
     else:
         playerDecision = getPlayerDecision(sum)
@@ -157,6 +157,7 @@ def getPlayerDecision(sum):
         getPlayerDecision(sum)
 
 def dealerSum(deck, hand):
+    print('''Dealer's hand is: {cards}.'''.format(cards=hand))
     # count how many aces in hand
     dealerAces = 0
     for card in hand:
