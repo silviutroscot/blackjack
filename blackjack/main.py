@@ -62,16 +62,52 @@ def startGameRound(username, credit):
         pSum = playerSum(deck, hand)
         # a sum larger than 21 makes the player lose automatically
         if pSum > 21:
-            newCredit = api.updateAccountCredit(username, credit, bet)
+            lostBet = -1 * bet
+            newCredit = api.updateAccountCredit(username, credit, lostBet)
             # if there was not one line modified, there is an error with db
             if newCredit[0] is not 1:
                 print("An unexpected error occured. Please report it")
                 exit()
             else:  
                 startGameRound(username, newCredit[1])
-
-        # if the player has a sum smaller than 21 the dealer
-        # needs to play. If the dealer has 17 or more it stops
+        # a sum smaller than 21 plays the game. Now the dealer needs to play
+        else:
+            dealerValue = dealerSum(deck, dealer)
+            # if the dealer has more than 21 it loses
+            if dealerValue > 21:
+                print("Dealer busted! You won!")
+                newCredit = api.updateAccountCredit(username, credit, bet)
+                if newCredit[0] is not 1:
+                    print("An unexpected error occured. Please report it")
+                    exit()
+                else:  
+                    startGameRound(username, newCredit[1])
+            # if the dealer has less than the player loses
+            elif dealerValue < pSum:
+                print('''You have {pSum} and the dealer has {dealer}. You won!
+                '''.format(pSum=pSum, dealer=dealerValue))
+                newCredit = api.updateAccountCredit(username, credit, bet)
+                if newCredit[0] is not 1:
+                    print("An unexpected error occured. Please report it")
+                    exit()
+                else:  
+                    startGameRound(username, newCredit[1])
+            # if player`s sum and dealer`s sum are equal, the bet is returned
+            elif dealerValue == pSum:
+                print('''You have {pSum} and the dealer has {dealer}. It's a 
+                draw.'''.format(pSum=pSum, dealer=dealerValue))
+                startGameRound(username, credit)
+            # if the dealer's sum is larger than the player's sum, player loses
+            else:
+                print('''You have {pSum}, the dealer has {dealer}. You lost:(
+                '''.format(pSum=pSum, dealer=dealerValue))
+                lostBet = -1 * bet
+                newCredit = api.updateAccountCredit(username, credit, lostBet)
+                if newCredit[0] is not 1:
+                    print("An unexpected error occured. Please report it")
+                    exit()
+                else:  
+                    startGameRound(username, newCredit[1])
 
 # handler for the gameplay of a player in one game round
 def playerSum(deck, hand): 
@@ -120,7 +156,34 @@ def getPlayerDecision(sum):
     else:
         getPlayerDecision(sum)
 
-#def dealerSum(hand):
+def dealerSum(deck, hand):
+    # count how many aces in hand
+    dealerAces = 0
+    for card in hand:
+        if card == 1:
+            dealerAces += 1
+
+    # compute the sum for each ace as having value 11, and decrease the 
+    # value to 1, one by one, until the sum is smaller than 21 
+    sum = 0 
+    for card in hand: 
+        # cards with value larger than 10 value 10
+        value = card
+        if card > 10:
+            value = 10
+        sum += value
+    
+    sum += dealerAces*10
+    while sum > 21 and dealerAces > 0:
+        sum -= 10
+        dealerAces -= 1
+    
+    # if the dealer has more than 17 in hand, it should stop playing
+    if sum > 16:
+        return sum
+    else:
+        hand.append(deck.getNextCard().value.value)
+        return dealerSum(deck, hand)
 
 
 if __name__ == "__main__": 

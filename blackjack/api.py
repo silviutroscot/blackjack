@@ -123,7 +123,7 @@ def login(username, password):
 # if the player wins, the bid paramerter is 
 # positive; otherwise, the bid is negative
 def updateAccountCredit(username, currentCredit, bid):
-    newCredit = currentCredit - bid
+    newCredit = currentCredit + bid
     # update the credit in the database
     usersDbConnector = mysql.connector.connect(
                 host="localhost",
