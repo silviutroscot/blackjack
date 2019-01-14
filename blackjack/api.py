@@ -11,7 +11,7 @@ kINITIAL_CREDIT = 100000
 sqlConnector = mysql.connector.connect(
     host="localhost",
     user="root",
-    passwd="parolaST1"
+    passwd="cretaker"
 )
 
 # create the database and tables if not existent
@@ -26,7 +26,7 @@ def initDatabase():
         usersDbConnector = mysql.connector.connect(
             host="localhost",
             user="root",
-            passwd="parolaST1",
+            passwd="cretaker",
             database="users"
         )
     except:
@@ -49,7 +49,7 @@ def registerUser(username, password):
             usersDbConnector = mysql.connector.connect(
                 host="localhost",
                 user="root",
-                passwd="parolaST1",
+                passwd="cretaker",
                 database="users"
                 )
             usersDbCursor = usersDbConnector.cursor()
@@ -63,7 +63,6 @@ def registerUser(username, password):
                 salt = generateRandomWord(10)
                 saltedPass = salt + password
                 passHash = sha256((saltedPass).encode('utf-8')).hexdigest()
-                print(passHash)
                 insertLoginEntryStatement = ("INSERT INTO logins (username,"
                     "passhash, salt) VALUES (%s, %s, %s)"
                     )
@@ -90,7 +89,7 @@ def login(username, password):
         usersDbConnector = mysql.connector.connect(
                 host="localhost",
                 user="root",
-                passwd="parolaST1",
+                passwd="cretaker",
                 database="users"
                 )
         usersDbCursor = usersDbConnector.cursor()
@@ -116,7 +115,7 @@ def login(username, password):
                 return (-1, ("Sorry, the credentials you have provided"
                 "are not valid"))
         else:
-            return (1, "Sorry, you have not registered")
+            return (1, "Sorry, you are not registered")
     else:
         return (2, "This username is not valid")
 
@@ -128,7 +127,7 @@ def updateAccountCredit(username, currentCredit, bid):
     usersDbConnector = mysql.connector.connect(
                 host="localhost",
                 user="root",
-                passwd="parolaST1",
+                passwd="cretaker",
                 database="users"
                 )
     usersDbCursor = usersDbConnector.cursor()

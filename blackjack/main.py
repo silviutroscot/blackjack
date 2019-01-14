@@ -19,7 +19,10 @@ def initGame():
 def registerUser():
     username = input("Please insert your username:")
     password = getpass.getpass("Password: ")
-    print(api.registerUser(username, password))
+    registrationResult = api.registerUser(username, password)
+    print(registrationResult[1])
+    if (registrationResult[0] == 0):
+        startGameRound(username, api.kINITIAL_CREDIT)
 
 # interface for authenticating a player
 def login():
@@ -33,6 +36,8 @@ def login():
             startGameRound(username, credit)
         else: 
             print("You have insufficient founds; please top up your account")
+    else:
+        print(loginResponse[1])
 
 # one round of the game
 def startGameRound(username, credit): 
