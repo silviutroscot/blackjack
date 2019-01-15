@@ -8,10 +8,14 @@ import string
 # initial credit for a new registered account
 kINITIAL_CREDIT = 100000
 
+# read db password
+with  open('passwd.txt') as f:
+    dbPassword = f.readline()
+
 sqlConnector = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    passwd="cretaker"
+    host = "localhost",
+    user = "root",
+    passwd = dbPassword
 )
 
 # create the database and tables if not existent
@@ -24,10 +28,10 @@ def initDatabase():
     # username, salt, passhash, amount of money available
     try:
         usersDbConnector = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            passwd="cretaker",
-            database="users"
+            host = "localhost",
+            user = "root",
+            passwd = dbPassword,
+            database = "users"
         )
     except:
         print("database connection failed")
@@ -47,9 +51,9 @@ def registerUser(username, password):
         if validateUsername(username):
             # check if the username is existent in the db
             usersDbConnector = mysql.connector.connect(
-                host="localhost",
-                user="root",
-                passwd="cretaker",
+                host = "localhost",
+                user = "root",
+                passwd = dbPassword,
                 database="users"
                 )
             usersDbCursor = usersDbConnector.cursor()
@@ -87,10 +91,10 @@ def login(username, password):
     # retreive its salt if exists
     if validateUsername(username):
         usersDbConnector = mysql.connector.connect(
-                host="localhost",
-                user="root",
-                passwd="cretaker",
-                database="users"
+                host = "localhost",
+                user = "root",
+                passwd = dbPassword,
+                database = "users"
                 )
         usersDbCursor = usersDbConnector.cursor()
         selectUserStatement = "SELECT * FROM logins WHERE username = %s"
@@ -113,7 +117,7 @@ def login(username, password):
                 return (0, credentialsCheckResponse[0][3])
             else:
                 return (-1, ("Sorry, the credentials you have provided"
-                "are not valid"))
+                " are not valid"))
         else:
             return (1, "Sorry, you are not registered")
     else:
@@ -125,9 +129,9 @@ def updateAccountCredit(username, currentCredit, bid):
     newCredit = currentCredit + bid
     # update the credit in the database
     usersDbConnector = mysql.connector.connect(
-                host="localhost",
-                user="root",
-                passwd="cretaker",
+                host = "localhost",
+                user = "root",
+                passwd = dbPassword,
                 database="users"
                 )
     usersDbCursor = usersDbConnector.cursor()
