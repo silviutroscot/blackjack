@@ -151,6 +151,10 @@ def validateUsername(username):
     
     return False
 
+# show the player the content of their hand
+def showHand(hand):
+    print('''Your hand is: {cards}.'''.format(cards=hand))
+
 def generateRandomWord(length):
    letters = string.ascii_lowercase
    return ''.join(random.choice(letters) for i in range(length))
