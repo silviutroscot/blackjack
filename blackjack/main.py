@@ -60,11 +60,13 @@ def startGameRound(username, credit):
         deck = gameUtils.Deck() 
         dealer = [deck.getNextCard().value.value]
         dealer.append(deck.getNextCard().value.value)
-        print('''Dealer's hand: {card} and an unrevealed card
-        '''.format(card=dealer[0]))
+        print('''Dealer's hand: {card} and an unrevealed card'''.format(card=dealer[0]))
         hand = [deck.getNextCard().value.value, deck.getNextCard().value.value]
         
-        pSum = playerSum(deck, hand)
+        pSum = playerSum(hand)
+        finalHand = applyPlayerDecision(pSum, deck, hand)
+
+        pSum = playerSum(finalHand)
         # a sum larger than 21 makes the player lose automatically
         if pSum > 21:
             lostBet = -1 * bet
@@ -99,8 +101,8 @@ def startGameRound(username, credit):
                     startGameRound(username, newCredit[1])
             # if player`s sum and dealer`s sum are equal, the bet is returned
             elif dealerValue == pSum:
-                print('''You have {pSum} and the dealer has {dealer}. It's a 
-                draw.\n'''.format(pSum=pSum, dealer=dealerValue))
+                print(("You have {pSum} and the dealer has {dealer}."
+                " It's a draw.\n").format(pSum=pSum, dealer=dealerValue))
                 startGameRound(username, credit)
             # if the dealer's sum is larger than the player's sum, player loses
             else:
@@ -115,7 +117,7 @@ def startGameRound(username, credit):
                     startGameRound(username, newCredit[1])
 
 # handler for the gameplay of a player in one game round
-def playerSum(deck, hand): 
+def playerSum(hand): 
     print('''Your hand is: {cards}.'''.format(cards=hand))
     # count how many aces in hand
     playerAces = 0
@@ -137,29 +139,28 @@ def playerSum(deck, hand):
     while sum > 21 and playerAces > 0:
         sum -= 10
         playerAces -= 1
-    
-    if sum > 21:
-        print("Sorry, your sum is larger than 21, you lost this round :(\n")
-        return sum
-    else:
-        playerDecision = getPlayerDecision(sum)
-        if playerDecision is 'd':
-            hand.append(deck.getNextCard().value.value)
-            return playerSum(deck, hand)
-        else:
-            return sum
+
+    return sum
 
 
 # method to handle user decision of drawing a card or to stop drawing
 # Returns 'd' if user wants to draw and 's' if user wants to stop
-def getPlayerDecision(sum):
+def applyPlayerDecision(sum, deck, hand):
     print('''The value of your hand is {value}'''.format(value=sum))
     playerDecisionRequest =  "Press 'd' to draw another card or 's' to stop: "
     playerDecision = input(playerDecisionRequest)
-    if playerDecision is 'd' or playerDecision is 's':
-        return playerDecision
+    if playerDecision is 'd':
+        hand.append(deck.getNextCard().value.value)
+        updatedSum = playerSum(hand)
+        if updatedSum > 21:
+            return hand
+        else:
+            applyPlayerDecision(updatedSum, deck, hand)
+    elif playerDecision is 's':
+        return hand
     else:
-        getPlayerDecision(sum)
+        print("Invalid key pressed")
+        applyPlayerDecision(sum, deck, hand)
 
 def dealerSum(deck, hand):
     print('''Dealer's hand is: {cards}.'''.format(cards=hand))
@@ -195,6 +196,4 @@ def dealerSum(deck, hand):
 if __name__ == "__main__": 
     api.initDatabase() 
     deck = gameUtils.Deck()
-    print(deck.getNextCard().value.value) 
     initGame()
-    #print(api.login("silviu", "parola1"))
