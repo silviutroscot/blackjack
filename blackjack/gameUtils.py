@@ -51,7 +51,7 @@ class Deck:
     def shuffleDeck(self):
         random.shuffle(self.cards)
 
-    # return the next card in the deck and remove it     
+    # return the next card in the deck and remove it
     def getNextCard(self):
         deckSize = len(self.cards)
         nextCard = self.cards[deckSize - 1]

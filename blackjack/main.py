@@ -6,7 +6,7 @@ from blackjack import api
 
 # the initialization of the game
 def initGame():
-    command = input("Press 'r' to register," 
+    command = input("Press 'r' to register,"
     "'l' to login or 'q' to quit: ")
     if command is 'r':
         registerUser()
@@ -34,13 +34,13 @@ def login():
         if (credit > 0):
             print ('''Welcome {username}'''.format(username=username))
             startGameRound(username, credit)
-        else: 
+        else:
             print("You have insufficient founds; please top up your account")
     else:
         print(loginResponse[1])
 
 # one round of the game
-def startGameRound(username, credit): 
+def startGameRound(username, credit):
     print ('''Your current credit is {credit}'''.format(credit=credit))
     betInput = input("Please insert your bet (numerical value): ")
     bet = 0
@@ -50,19 +50,19 @@ def startGameRound(username, credit):
         print("Your bet needs to be an integer")
         startGameRound(username, credit)
 
-    if bet > credit: 
+    if bet > credit:
         print("You cannot bet more than your current sold; please try again")
         startGameRound(username, credit)
     elif bet <= 0:
         print("Your bet needs to be at least 1")
         startGameRound(username, credit)
-    else: 
-        deck = gameUtils.Deck() 
+    else:
+        deck = gameUtils.Deck()
         dealer = [deck.getNextCard().value.value]
         dealer.append(deck.getNextCard().value.value)
         print('''Dealer's hand: {card} and an unrevealed card'''.format(card=dealer[0]))
         hand = [deck.getNextCard().value.value, deck.getNextCard().value.value]
-        
+
         applyPlayerDecision(deck, hand)
         pSum = playerSum(hand)
         # a sum larger than 21 makes the player lose automatically
@@ -75,7 +75,7 @@ def startGameRound(username, credit):
             if newCredit[0] is not 1:
                 print("An unexpected error occured. Please report it")
                 exit()
-            else:  
+            else:
                 startGameRound(username, newCredit[1])
         # a sum smaller than 21 plays the game. Now the dealer needs to play
         else:
@@ -87,7 +87,7 @@ def startGameRound(username, credit):
                 if newCredit[0] is not 1:
                     print("An unexpected error occured. Please report it")
                     exit()
-                else:  
+                else:
                     startGameRound(username, newCredit[1])
             # if the dealer has less than the player loses
             elif dealerValue < pSum:
@@ -97,7 +97,7 @@ def startGameRound(username, credit):
                 if newCredit[0] is not 1:
                     print("An unexpected error occured. Please report it")
                     exit()
-                else:  
+                else:
                     startGameRound(username, newCredit[1])
             # if player`s sum and dealer`s sum are equal, the bet is returned
             elif dealerValue == pSum:
@@ -113,27 +113,27 @@ def startGameRound(username, credit):
                 if newCredit[0] is not 1:
                     print("An unexpected error occured. Please report it")
                     exit()
-                else:  
+                else:
                     startGameRound(username, newCredit[1])
 
 # handler for the gameplay of a player in one game round
-def playerSum(hand): 
+def playerSum(hand):
     # count how many aces in hand
     playerAces = 0
     for card in hand:
         if card == 1:
             playerAces += 1
 
-    # compute the sum for each ace as having value 11, and decrease the 
-    # value to 1, one by one, until the sum is smaller than 21 
-    sum = 0 
-    for card in hand: 
+    # compute the sum for each ace as having value 11, and decrease the
+    # value to 1, one by one, until the sum is smaller than 21
+    sum = 0
+    for card in hand:
         # cards with value larger than 10 value 10
         value = card
         if card > 10:
             value = 10
         sum += value
-    
+
     sum += playerAces*10
     while sum > 21 and playerAces > 0:
         sum -= 10
@@ -154,11 +154,11 @@ def applyPlayerDecision(deck, hand):
         hand.append(deck.getNextCard().value.value)
         updatedSum = playerSum(hand)
         if updatedSum > 21:
-            return 
+            return
         else:
             applyPlayerDecision(deck, hand)
     elif playerDecision is 's':
-        return 
+        return
     else:
         print("Invalid key pressed")
         applyPlayerDecision(deck, hand)
@@ -171,21 +171,21 @@ def dealerSum(deck, hand):
         if card == 1:
             dealerAces += 1
 
-    # compute the sum for each ace as having value 11, and decrease the 
-    # value to 1, one by one, until the sum is smaller than 21 
-    sum = 0 
-    for card in hand: 
+    # compute the sum for each ace as having value 11, and decrease the
+    # value to 1, one by one, until the sum is smaller than 21
+    sum = 0
+    for card in hand:
         # cards with value larger than 10 value 10
         value = card
         if card > 10:
             value = 10
         sum += value
-    
+
     sum += dealerAces*10
     while sum > 21 and dealerAces > 0:
         sum -= 10
         dealerAces -= 1
-    
+
     # if the dealer has more than 17 in hand, it should stop playing
     if sum > 16:
         return sum
@@ -193,7 +193,7 @@ def dealerSum(deck, hand):
         hand.append(deck.getNextCard().value.value)
         return dealerSum(deck, hand)
 
-if __name__ == "__main__": 
-    api.initDatabase() 
+if __name__ == "__main__":
+    api.initDatabase()
     deck = gameUtils.Deck()
     initGame()
