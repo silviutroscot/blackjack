@@ -156,5 +156,5 @@ def showHand(hand):
     print('''Your hand is: {cards}.'''.format(cards=hand))
 
 def generateRandomWord(length):
-   letters = string.ascii_lowercase
-   return ''.join(random.choice(letters) for i in range(length))
+    letters = string.ascii_lowercase
+    return ''.join(random.choice(letters) for i in range(length))
