@@ -12,7 +12,7 @@ class TestPlayerSum(unittest.TestCase):
         reversedHand = [eightCard.value.value, threeCard.value.value]
         self.assertEqual(main.playerSum(hand), 11)
         self.assertEqual(main.playerSum(reversedHand), 11)
-    
+
     def testTwoCardsOneLargerThanTenNotAceSum(self):
         twelve = gameUtils.Values.twelve
         twelveCard = gameUtils.Card(twelve, gameUtils.SuitSymbols.club)

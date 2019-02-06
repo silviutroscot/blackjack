@@ -12,12 +12,12 @@ class TestValidateUsername(unittest.TestCase):
         self.assertFalse(api.validateUsername("6"))
 
     def test_too_long_string(self):
-        self.assertFalse(api.validateUsername("""Lorem ipsum dolor sit amet, 
-        consectetur adipiscing elit. Maecenas rhoncus venenatis ante. 
-        Curabitur in suscipit justo. Cras at tellus sit amet mauris pretium 
+        self.assertFalse(api.validateUsername("""Lorem ipsum dolor sit amet,
+        consectetur adipiscing elit. Maecenas rhoncus venenatis ante.
+        Curabitur in suscipit justo. Cras at tellus sit amet mauris pretium
         maximus nec a risus. Quisque ut hendrerit felis, finibus sodales
         est. Proin rutrum,"""))
-        
+
     def test_numerical_characters(self):
         self.assertTrue(api.validateUsername("000143"))
         self.assertTrue(api.validateUsername("tstring1"))

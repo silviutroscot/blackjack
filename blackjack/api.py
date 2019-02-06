@@ -20,7 +20,7 @@ sqlConnector = mysql.connector.connect(
 
 # create the database and tables if not existent
 def initDatabase():
-    # create a database for the players if not existent 
+    # create a database for the players if not existent
     cursor = sqlConnector.cursor()
     cursor.execute("CREATE DATABASE IF NOT EXISTS users")
 
@@ -44,10 +44,10 @@ def initDatabase():
 
 
 # insert an user in the database if the username is not already there,
-#  and provides them the initial amount of money to start the game; 
+#  and provides them the initial amount of money to start the game;
 # return true if the user is inserted successfully and false otherwise
 def registerUser(username, password):
-    if len(password) > 6: 
+    if len(password) > 6:
         if validateUsername(username):
             # check if the username is existent in the db
             usersDbConnector = mysql.connector.connect(
@@ -61,7 +61,7 @@ def registerUser(username, password):
             adr = (username, )
             usersDbCursor.execute(selectUserStatement, adr)
             result = usersDbCursor.fetchall()
-            # if the username is not existent, generate salt and insert 
+            # if the username is not existent, generate salt and insert
             # the user and the password hash in the login table
             if len(result) is 0:
                 salt = generateRandomWord(10)
@@ -74,7 +74,7 @@ def registerUser(username, password):
                 usersDbCursor.execute(insertLoginEntryStatement, values)
                 usersDbConnector.commit()
                 return (0, (
-                    "Your account was successfuly registered!" 
+                    "Your account was successfuly registered!"
                     "Welcome to the game!"
                     ))
             else:
@@ -123,7 +123,7 @@ def login(username, password):
     else:
         return (2, "This username is not valid")
 
-# if the player wins, the bid paramerter is 
+# if the player wins, the bid paramerter is
 # positive; otherwise, the bid is negative
 def updateAccountCredit(username, currentCredit, bid):
     newCredit = currentCredit + bid
@@ -142,13 +142,13 @@ def updateAccountCredit(username, currentCredit, bid):
     usersDbConnector.commit()
     return (usersDbCursor.rowcount, newCredit)
 
-# check if the username contains only letters and  
+# check if the username contains only letters and
 # digits and its length is between 5 and 255 chars
 def validateUsername(username):
     if len(username) < 255 and len(username) > 5:
         if re.match("^[A-Za-z0-9_-]*$", username):
             return True
-    
+
     return False
 
 # show the player the content of their hand
@@ -156,5 +156,5 @@ def showHand(hand):
     print('''Your hand is: {cards}.'''.format(cards=hand))
 
 def generateRandomWord(length):
-   letters = string.ascii_lowercase
-   return ''.join(random.choice(letters) for i in range(length))
+    letters = string.ascii_lowercase
+    return ''.join(random.choice(letters) for i in range(length))
